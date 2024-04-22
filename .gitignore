@@ -1,4 +1,8 @@
 .DS_Store
 .venv
+<<<<<<< HEAD
 .json
 .ini
+=======
+config.json
+>>>>>>> adecd6fc (Ignore config.json)
