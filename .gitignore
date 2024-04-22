@@ -1,8 +1,15 @@
 .DS_Store
 .venv
 <<<<<<< HEAD
+<<<<<<< HEAD
 .json
 .ini
 =======
 config.json
 >>>>>>> adecd6fc (Ignore config.json)
+=======
+config.json
+=======
+.json
+>>>>>>> 4b1a1f67 (added verbose logging)
+>>>>>>> 775e7f7b (added verbose logging)
