@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter.scrolledtext import ScrolledText
+import analyzer
 
 class UIClass():
-    def __init__(self):
+    def __init__(self, a):
+        self.analyzer = a
         self.root = tk.Tk()
         self.WIDTH = 1500
         self.HEIGHT = 700
@@ -49,7 +51,6 @@ class UIClass():
                 self.essay = content
                 text_widget.delete('1.0', tk.END) 
                 text_widget.insert(tk.END, content) 
-                data = content
 
     def add_highlighter(self):
         text.tag_add("start", "1.11","1.17")
@@ -57,8 +58,9 @@ class UIClass():
 
     def analyze_text(self, text_widget):
         print("analyze text goes here")
-        print(self.essay)
+        self.analyzer.process_data(self.essay)
 
 if __name__ == "__main__":
-    ui = UIClass()
+    analysis = analyzer.Analyzer()
+    ui = UIClass(analysis)
     ui.create_ui()
