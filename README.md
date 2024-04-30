@@ -1,2 +1,2 @@
 # ESSAY ANNIHILIATOR >:D 
-### more to come
+### need a config.ini with api key for openai
