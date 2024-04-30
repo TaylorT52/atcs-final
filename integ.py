@@ -15,32 +15,16 @@ class UIClass():
     def create_ui(self):
         self.root.title("Essay Annihilator")
         self.root.geometry(f"{self.WIDTH}x{self.HEIGHT}")
-
-        # lhs panel for text display
         left_panel = tk.Frame(self.root, bg='white')
         left_panel.pack(side='left', fill='both', expand=True)
-
-        text_area = ScrolledText(left_panel, wrap=tk.WORD, bg="white", font=('Times New Roman', 18), foreground="black")
-        text_area.pack(padx=10, pady=10, fill='both', expand=True)
-
-        # rhs panel for controls
+        self.text_area = ScrolledText(left_panel, wrap=tk.WORD, bg="white", font=('Times New Roman', 18), foreground="black")
+        self.text_area.pack(padx=10, pady=10, fill='both', expand=True)
         right_panel = tk.Frame(self.root, bg='lightgray', width=self.PANELWIDTH) 
         right_panel.pack(side='right', fill='both', expand=True)
-
-        # upload text files & display their content
-        upload_button = tk.Button(right_panel, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black', font=('Times New Roman', 18), command=lambda: self.upload_file(text_area))
+        upload_button = tk.Button(right_panel, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black', font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area))
         upload_button.pack(pady=25, padx=20)
-
-        # analyze text
-        analyze_button = tk.Button(right_panel, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black', font=('Times New Roman', 18), command=lambda: self.analyze_text(text_area))
+        analyze_button = tk.Button(right_panel, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black', font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area))
         analyze_button.pack(pady=10, padx=20)
-
-        label_1 = tk.Label(self.root, text ='Highlight Key', bg="lightgray", fg='black', font=('Times New Roman', 18))
-        label_1.place(relx = 0.85, rely = 0.35, anchor = 'center')
-
-        label_2 = tk.Label(self.root, text="Hasty Generalization", bg='yellow', fg='black', font=('Times New Roman', 18))
-        label_2.place(relx = 0.85, rely = 0.40, anchor = 'center')
-
         self.root.mainloop()
 
     def upload_file(self, text_widget):
@@ -52,13 +36,25 @@ class UIClass():
                 text_widget.delete('1.0', tk.END) 
                 text_widget.insert(tk.END, content) 
 
-    def add_highlighter(self):
-        text.tag_add("start", "1.11","1.17")
-        text.tag_config("start", background= "black", foreground= "white")
-
     def analyze_text(self, text_widget):
-        print("analyze text goes here")
-        self.analyzer.process_data(self.essay)
+        results = self.analyzer.process_data(self.essay)
+        results = results.replace("\n", " ") 
+        result_sentences = results.split(".")  
+
+        for sentence in result_sentences:
+            if sentence:
+                sentence.rstrip()
+                start_index = self.essay.find(sentence)
+                if start_index != -1: 
+                    end_index = start_index + len(sentence)
+                    start_position = text_widget.index(f"1.0+{start_index}c")
+                    end_position = text_widget.index(f"1.0+{end_index}c")
+
+                    tag_name = f"highlight_{start_index}"  
+                    text_widget.tag_add(tag_name, start_position, end_position)  
+                    text_widget.tag_config(tag_name, background='yellow', foreground='black')  
+                else:
+                    print("the sentence doesn't exist!")
 
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()
