@@ -36,6 +36,7 @@ class UIClass():
                 text_widget.delete('1.0', tk.END) 
                 text_widget.insert(tk.END, content) 
 
+    #TODO: fix this to accurately highlight
     def analyze_text(self, text_widget):
         results = self.analyzer.process_data(self.essay)
         results = results.replace("\n", " ") 

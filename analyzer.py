@@ -11,6 +11,7 @@ class Analyzer():
         self.hasty_generalizations = ["In society", "In the modern day", "Since the beginning of time", "Some may argue"]
         self.api_key = self.load_api_key()
 
+    #TODO: need api key??? 
     def load_api_key(self):
         config = configparser.ConfigParser()
         config.read('config.ini') 
@@ -28,8 +29,10 @@ class Analyzer():
         all_splits = text_splitter.split_documents(data)
         oembed = OllamaEmbeddings(model="nomic-embed-text")
         vectorstore = Chroma.from_documents(documents=all_splits, embedding=oembed)
+        #TODO: fix questions
         question="Return the exact sentences with 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial' or similar errors in this text that tell readers 'that' something matters and not 'what' matters." + text
         print(question)
+        #TODO: need runnable nomic-embed-text to not use openapi
         qachain=RetrievalQA.from_chain_type(llm=OpenAI(api_key=self.api_key), retriever=vectorstore.as_retriever())
         ans = qachain.invoke({"query": question})
         result = ans["result"]
