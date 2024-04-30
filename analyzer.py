@@ -28,7 +28,12 @@ class Analyzer():
         all_splits = text_splitter.split_documents(data)
         oembed = OllamaEmbeddings(model="nomic-embed-text")
         vectorstore = Chroma.from_documents(documents=all_splits, embedding=oembed)
-        question="Return the entire input text with double asterisks around the phrase [we begin to wonder]"
+        question="Return the exact sentences with 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial' or similar errors in this text that tell readers 'that' something matters and not 'what' matters." + text
+        print(question)
         qachain=RetrievalQA.from_chain_type(llm=OpenAI(api_key=self.api_key), retriever=vectorstore.as_retriever())
         ans = qachain.invoke({"query": question})
-        print(ans["result"])
+        result = ans["result"]
+        print(result)
+        return result
+
+# Second, return sentences with weak verbs, such as 'shows, suggests, means, demonstrates, uses, utilizes, employs, illustrates, there were, there are, there is' or other weak verbs:
