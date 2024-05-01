@@ -64,5 +64,6 @@ class UIClass():
 
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()
-    ui = UIClass(analysis)
-    ui.create_ui()
+    analysis.process_data("")
+    # ui = UIClass(analysis)
+    # ui.create_ui()
