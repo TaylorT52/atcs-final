@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter.scrolledtext import ScrolledText
 import analyzer
+import re
+import itertools
 
 class UIClass():
     def __init__(self, a):
@@ -11,6 +13,7 @@ class UIClass():
         self.HEIGHT = 700
         self.PANELWIDTH = 350
         self.essay = ""
+        self.acceptable = [",", "-", ";", ":", "'", "’", " "]
     
     def create_ui(self):
         self.root.title("Essay Annihilator")
@@ -39,23 +42,25 @@ class UIClass():
     #TODO: fix this to accurately highlight
     def analyze_text(self, text_widget):
         results = self.analyzer.process_data(self.essay)
-        results = results.replace("\n", " ") 
-        result_sentences = results.split(".")  
+        results = results.replace("\n", "") 
+        result_sentences = results.split(".")
+        for i in range(len(result_sentences)):  
+            re.findall(r'"([^"]*)"', result_sentences[i].replace('"', "").replace(' -', "").replace('- ', ""))
+            result_sentences[i] = "".join(filter(lambda x: x.isalpha() or x in self.acceptable, result_sentences[i])).strip()
 
         for sentence in result_sentences:
-            if sentence:
-                sentence.rstrip()
-                start_index = self.essay.find(sentence)
-                if start_index != -1: 
+            start_index = self.essay.find(sentence)
+            if start_index != -1:
+                if not start_index == 0:
                     end_index = start_index + len(sentence)
                     start_position = text_widget.index(f"1.0+{start_index}c")
                     end_position = text_widget.index(f"1.0+{end_index}c")
-
-                    tag_name = f"highlight_{start_index}"  
+                    tag_name = f"highlight_{start_position}"
                     text_widget.tag_add(tag_name, start_position, end_position)  
                     text_widget.tag_config(tag_name, background='yellow', foreground='black')  
-                else:
-                    print("the sentence doesn't exist!")
+            else:
+                print("nooooo")
+                print(sentence)
 
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()
