@@ -60,7 +60,7 @@ class UIClass():
                     text_widget.tag_config(tag_name, background='yellow', foreground='black')  
             else:
                 print("nooooo")
-                print(sentence)
+                print("+"+sentence+"+")
 
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()

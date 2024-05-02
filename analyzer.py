@@ -20,7 +20,7 @@ class Analyzer():
     def process_data(self, text):
         print("processing data...")
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=150,
+            chunk_size=100,
             chunk_overlap=20,
             length_function=len,
             is_separator_regex=False
@@ -39,4 +39,3 @@ class Analyzer():
         print(result)
         return result
 
-# Second, return sentences with weak verbs, such as 'shows, suggests, means, demonstrates, uses, utilizes, employs, illustrates, there were, there are, there is' or other weak verbs:
