@@ -58,12 +58,11 @@ class UIClass():
     #TODO: fix this to accurately highlight
     def analyze_text(self, text_widget):
         results = self.analyzer.process_data(self.essay)
-        results = results.replace("\n", "") 
-        result_sentences = results.split(".")
-        for i in range(len(result_sentences)):  
-            re.findall(r'"([^"]*)"', result_sentences[i].replace('"', "").replace(' -', "").replace('- ', ""))
-            result_sentences[i] = "".join(filter(lambda x: x.isalpha() or x in self.acceptable, result_sentences[i])).strip()
+        pattern = r'\d+\.\s+"(.*?)"'
 
+        # Find all matches
+        result_sentences = re.findall(pattern, results, re.DOTALL)
+       
         for sentence in result_sentences:
             start_index = self.essay.find(sentence)
             if start_index != -1:
