@@ -4,6 +4,7 @@ from tkinter.scrolledtext import ScrolledText
 import analyzer
 import re
 import itertools
+from tkinter import ttk
 
 class UIClass():
     def __init__(self, a):
@@ -13,6 +14,7 @@ class UIClass():
         self.HEIGHT = 700
         self.PANELWIDTH = 350
         self.essay = ""
+        self.dropdown_options = ["Option 1", "Option 2", "Option 3"]
         self.acceptable = [",", "-", ";", ":", "'", "’", " "]
     
     def create_ui(self):
@@ -24,10 +26,18 @@ class UIClass():
         self.text_area.pack(padx=10, pady=10, fill='both', expand=True)
         right_panel = tk.Frame(self.root, bg='lightgray', width=self.PANELWIDTH) 
         right_panel.pack(side='right', fill='both', expand=True)
+        title0 = ttk.Label(right_panel, text="Analyze")
+        title0.pack(pady=10)
         upload_button = tk.Button(right_panel, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black', font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area))
         upload_button.pack(pady=25, padx=20)
         analyze_button = tk.Button(right_panel, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black', font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area))
         analyze_button.pack(pady=10, padx=20)
+        title1 = ttk.Label(right_panel, text="Add")
+        title1.pack(pady=10)
+        # combobox = ttk.Combobox(right_panel, values=self.dropdown_options)
+        # combobox.current(0)
+        # combobox.pack(pady=20)
+        # combobox.bind("<<ComboboxSelected>>", self.selection_changed(combobox=combobox))
         self.root.mainloop()
 
     def upload_file(self, text_widget):
@@ -38,6 +48,12 @@ class UIClass():
                 self.essay = content
                 text_widget.delete('1.0', tk.END) 
                 text_widget.insert(tk.END, content) 
+
+    def selection_changed(event, combobox):
+        print(f"Selected: {combobox.get()}")
+
+    def format_sentences(self, text):
+        print("formatting sentences")
 
     #TODO: fix this to accurately highlight
     def analyze_text(self, text_widget):
