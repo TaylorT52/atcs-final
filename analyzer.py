@@ -4,28 +4,15 @@ from langchain.embeddings import OllamaEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
-<<<<<<< HEAD
 from langchain_community.llms import Ollama
 import configparser
 from crewai import Agent, Task, Crew, Process
-=======
-import configparser
->>>>>>> 4194af53 (works using open ai!)
 
 class Analyzer():
     def __init__(self):
         self.hasty_generalizations = ["In society", "In the modern day", "Since the beginning of time", "Some may argue"]
-<<<<<<< HEAD
         self.model = Ollama(model = "llama2")
         self.goal = "Identify sentences where there are errors in student essays from provided common student errors and return them. Return the exact sentences with 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial' or similar errors in this text that tell readers 'that' something matters and not 'what' matters. Exclude sentences that contain 'because'"
-=======
-        self.api_key = self.load_api_key()
-
-    def load_api_key(self):
-        config = configparser.ConfigParser()
-        config.read('config.ini') 
-        return config['API']['APIKey']
->>>>>>> 4194af53 (works using open ai!)
 
     def process_data(self, text):
         responder = Agent(
@@ -36,7 +23,6 @@ class Analyzer():
             allow_delegation = False,
             llm = self.model
         )
-<<<<<<< HEAD
         identify_errors = Task(
             description = f"Identify the errors in the following essay: '{text}'",
             agent = responder,
@@ -80,13 +66,3 @@ class Analyzer():
     #     print(result)
     #     return result
 
-=======
-        data = text_splitter.create_documents([text])
-        all_splits = text_splitter.split_documents(data)
-        oembed = OllamaEmbeddings(model="nomic-embed-text")
-        vectorstore = Chroma.from_documents(documents=all_splits, embedding=oembed)
-        question="Return the entire input text with double asterisks around the phrase [we begin to wonder]"
-        qachain=RetrievalQA.from_chain_type(llm=OpenAI(api_key=self.api_key), retriever=vectorstore.as_retriever())
-        ans = qachain.invoke({"query": question})
-        print(ans["result"])
->>>>>>> 4194af53 (works using open ai!)
