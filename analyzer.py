@@ -10,11 +10,10 @@ from crewai import Agent, Task, Crew, Process
 
 class Analyzer():
     def __init__(self):
-        self.hasty_generalizations = ["In society", "In the modern day", "Since the beginning of time", "Some may argue"]
         self.model = Ollama(model = "llama2")
 
     def process_data(self, text):
-        my_goal = "Identify sentences where there are errors in student essays from the following errors and return them." + "Return the exact sentences with 'importance of, significance of, value of, valuable, useful," + " necessary, necessity of, important, it's important, crucial' in this text that tell readers 'that' something matters and not 'what' matters." + "Return the exact sentences with any of the following hasty generalizations: " + "'Since the beginning of time', 'in society', 'in our world', 'throughout history'." + "Exclude sentences that contain 'because'"
+        my_goal = "Identify sentences where there are errors in student essays from only the provided list of errors and return them.""eturn the exact sentences with 'importance of, significance of, value of, valuable, useful," + " necessary, necessity of, important, it's important, crucial' in this text that tell readers 'that' something matters and not 'what' matters." + "Return the exact sentences with any of the following hasty generalizations: " + "'Since the beginning of time', 'in society', 'in our world', 'throughout history'." + "Exclude sentences that contain 'because'. Please provide an explanation for why you returned each sentence you returned. You do not need to fix the sentences or provide a conclusion text. Only return sentences with the provided errors. If there are no errors in the text, you may return nothing."
         responder = Agent(
             role = "English teacher assistant",
             goal = my_goal,
@@ -26,7 +25,7 @@ class Analyzer():
         identify_errors = Task(
             description = f"Identify the errors in the following essay: '{text}'",
             agent = responder,
-            expected_output = "A list of each sentence where this an error."
+            expected_output = "Only a list of each sentence where this an error, followed by a brief explanation of why the sentence was returned."
         )
         crew = Crew(
             agents = [responder],
