@@ -39,28 +39,13 @@ class UIClass():
                 text_widget.delete('1.0', tk.END) 
                 text_widget.insert(tk.END, content) 
 
-    #TODO: fix this to accurately highlight
-    def analyze_text(self, text_widget):
-        results = self.analyzer.process_data(self.essay)
-        results = results.replace("\n", "") 
-        result_sentences = results.split(".")
-        for i in range(len(result_sentences)):  
-            re.findall(r'"([^"]*)"', result_sentences[i].replace('"', "").replace(' -', "").replace('- ', ""))
-            result_sentences[i] = "".join(filter(lambda x: x.isalpha() or x in self.acceptable, result_sentences[i])).strip()
+    def add_highlighter(self):
+        text.tag_add("start", "1.11","1.17")
+        text.tag_config("start", background= "black", foreground= "white")
 
-        for sentence in result_sentences:
-            start_index = self.essay.find(sentence)
-            if start_index != -1:
-                if not start_index == 0:
-                    end_index = start_index + len(sentence)
-                    start_position = text_widget.index(f"1.0+{start_index}c")
-                    end_position = text_widget.index(f"1.0+{end_index}c")
-                    tag_name = f"highlight_{start_position}"
-                    text_widget.tag_add(tag_name, start_position, end_position)  
-                    text_widget.tag_config(tag_name, background='yellow', foreground='black')  
-            else:
-                print("nooooo")
-                print(sentence)
+    def analyze_text(self, text_widget):
+        print("analyze text goes here")
+        self.analyzer.process_data(self.essay)
 
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()
