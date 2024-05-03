@@ -12,13 +12,13 @@ class Analyzer():
     def __init__(self):
         self.hasty_generalizations = ["In society", "In the modern day", "Since the beginning of time", "Some may argue"]
         self.model = Ollama(model = "llama2")
-        self.goal = "Identify sentences where there are errors in student essays from provided common student errors and return them. Return the exact sentences with 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial' or similar errors in this text that tell readers 'that' something matters and not 'what' matters. Exclude sentences that contain 'because'"
 
     def process_data(self, text):
+        my_goal = "Identify sentences where there are errors in student essays from the following errors and return them." + "Return the exact sentences with 'importance of, significance of, value of, valuable, useful," + " necessary, necessity of, important, it's important, crucial' in this text that tell readers 'that' something matters and not 'what' matters." + "Return the exact sentences with any of the following hasty generalizations: " + "'Since the beginning of time', 'in society', 'in our world', 'throughout history'." + "Exclude sentences that contain 'because'"
         responder = Agent(
             role = "English teacher assistant",
-            goal = self.goal,
-            backstory = "Given a student's essay, a teacher needs help marking up the errors in the student's essay. ",
+            goal = my_goal,
+            backstory = "Given a student's essay, a teacher needs help marking up the errors in the student's essay.",
             verbose = True,
             allow_delegation = False,
             llm = self.model
@@ -37,6 +37,12 @@ class Analyzer():
 
         output = crew.kickoff()
         return output
+
+if __name__ == "__main__":
+    analysis = Analyzer()
+    f = open("essays/[Kletter] dog.txt", "r")
+    text = f.read()
+    print(analysis.process_data(text))
 
     # #TODO: need api key??? 
     # def load_api_key(self):
