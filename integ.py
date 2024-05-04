@@ -14,9 +14,12 @@ class UIClass:
         self.HEIGHT = 700
         self.PANELWIDTH = 350
         self.essay = ""
+        self.selected_sentence = "Click on any highlighted sentence to see your error"
         self.matched_errors = []
         self.matched_sentences = []
-        self.selected_sentence = "Click on any highlighted sentence to see your error"
+        self.left_panel = tk.Frame(self.root, bg='white')
+        self.right_panel = tk.Frame(self.root, bg='lightgray', width=self.PANELWIDTH)
+        self.title1 = ttk.Label(self.right_panel, text=self.selected_sentence, font=('Times New Roman', 18))
         self.create_ui()
 
     ### manage UI here ### 
@@ -26,25 +29,23 @@ class UIClass:
         self.root.resizable(False, False)
 
         ### LEFT PANEL ###
-        left_panel = tk.Frame(self.root, bg='white')
-        left_panel.grid_propagate(False)
-        left_panel.pack(side='left', fill='both', expand=True)
-        self.text_area = ScrolledText(left_panel, wrap=tk.WORD, bg="white", font=('Times New Roman', 18), foreground="black")
+        self.left_panel.grid_propagate(False)
+        self.left_panel.pack(side='left', fill='both', expand=True)
+        self.text_area = ScrolledText(self.left_panel, wrap=tk.WORD, bg="white", font=('Times New Roman', 18), foreground="black")
         self.text_area.pack(padx=10, pady=10, fill='both', expand=True)
 
         ### RIGHT PANEL ###
-        right_panel = tk.Frame(self.root, bg='lightgray', width=self.PANELWIDTH)
-        right_panel.pack(side='right', fill='both', expand=True)
-        right_panel.grid_propagate(False)
-        title0 = ttk.Label(right_panel, text="Analyze", font=('Times New Roman', 18)).pack(pady=10)
-        upload_button = tk.Button(right_panel, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black',
+        self.right_panel.pack(side='right', fill='both', expand=True)
+        self.right_panel.grid_propagate(False)
+        title0 = ttk.Label(self.right_panel, text="Analyze", font=('Times New Roman', 18)).pack(pady=10)
+        upload_button = tk.Button(self.right_panel, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black',
                                   font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area))
         upload_button.pack(pady=25, padx=20)
-        analyze_button = tk.Button(right_panel, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
+        analyze_button = tk.Button(self.right_panel, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
                                    font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area))
         analyze_button.pack(pady=10, padx=20)
-        self.title1 = ttk.Label(right_panel, text=self.selected_sentence, font=('Times New Roman', 18)).pack(pady=20)
-        self.title2 = ttk.Label(right_panel, text="Add to the model", font=('Times New Roman', 18)).pack(pady=20)
+        self.title1.pack(pady=20)
+        self.title2 = ttk.Label(self.right_panel, text="Add to the model", font=('Times New Roman', 18)).pack(pady=20)
         self.root.mainloop()
 
     ### upload file as a .txt and read ### 
@@ -96,6 +97,6 @@ class UIClass:
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()
     promptgen = promptgen.PromptGen()
-    promptgen.read_csv()
+    promptgen.check()
     ui = UIClass(analysis)
     ui.create_ui()
