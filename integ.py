@@ -4,7 +4,7 @@ from tkinter.scrolledtext import ScrolledText
 import re
 from tkinter import ttk
 import analyzer
-
+import promptgen
 
 class UIClass:
     def __init__(self, a):
@@ -17,7 +17,6 @@ class UIClass:
         self.matched_errors = []
         self.matched_sentences = []
         self.selected_sentence = "Click on any highlighted sentence to see your error"
-        self.dropdown_options = ["Option 1", "Option 2", "Option 3"]
         self.create_ui()
 
     ### manage UI here ### 
@@ -96,5 +95,7 @@ class UIClass:
 
 if __name__ == "__main__":
     analysis = analyzer.Analyzer()
+    promptgen = promptgen.PromptGen()
+    promptgen.read_csv()
     ui = UIClass(analysis)
     ui.create_ui()

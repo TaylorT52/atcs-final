@@ -9,10 +9,8 @@ from crewai import Agent, Task, Crew, Process
 
 class Analyzer():
     def __init__(self):
-        self.hasty_generalizations = ["In society", "In the modern day", "Since the beginning of time", "Some may argue"]
-        self.tvw = ["Necessity of", "important", "importance of", "value of", "useful", "necessary"]
         self.model = Ollama(model = "llama2")
-        self.goal = "Return the exact sentences with 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial' or similar errors in this text that tell readers 'that' something matters and not 'what' matters."
+        self.goal = "Return the exact sentences that contain the phrases 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial' or similar errors in this text that tell readers 'that' something matters and not 'what' matters."
 
     def process_data(self, text):
         responder = Agent(
@@ -24,7 +22,7 @@ class Analyzer():
             llm = self.model
         )
         identify_errors = Task(
-            description = f"Identify the errors in the following essay: '{text}'",
+            description = f"Return the exact sentences that contain the phrases 'importance of, significance of, value of, valuable, useful, necessary, necessity of, important, it's important, crucial': '{text}'",
             agent = responder,
             expected_output = "A list of each sentence where this an error."
         )
