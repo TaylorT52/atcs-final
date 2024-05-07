@@ -17,9 +17,12 @@ class UIClass:
         self.selected_sentence = "Click on any highlighted sentence to see your error"
         self.matched_errors = []
         self.matched_sentences = []
-        self.left_panel = tk.Frame(self.root, bg='white')
-        self.right_panel = tk.Frame(self.root, bg='lightgray', width=self.PANELWIDTH)
-        self.title1 = ttk.Label(self.right_panel, text=self.selected_sentence, font=('Times New Roman', 18))
+        self.left_panel = tk.Frame(self.root, width=self.WIDTH/2, height=self.HEIGHT)
+        self.right_panel = tk.Frame(self.root, width=self.WIDTH/2, height=self.HEIGHT)
+        self.tab_control = ttk.Notebook(self.right_panel)
+        self.tab1 = ttk.Frame(self.tab_control)
+        self.tab2 = ttk.Frame(self.tab_control)
+        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
         self.create_ui()
 
     ### manage UI here ### 
@@ -37,16 +40,49 @@ class UIClass:
         ### RIGHT PANEL ###
         self.right_panel.pack(side='right', fill='both', expand=True)
         self.right_panel.grid_propagate(False)
-        title0 = ttk.Label(self.right_panel, text="Analyze", font=('Times New Roman', 18)).pack(pady=10)
-        upload_button = tk.Button(self.right_panel, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black',
-                                  font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area))
-        upload_button.pack(pady=25, padx=20)
-        analyze_button = tk.Button(self.right_panel, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
-                                   font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area))
-        analyze_button.pack(pady=10, padx=20)
+
+        # Add tabs
+        self.tab_control.add(self.tab1, text='Analyze')
+        self.tab_control.add(self.tab2, text='Add to Model')
+        self.tab_control.pack(expand=1, fill='both')
+
+        # First tab
+        ttk.Label(self.tab1, text="Analyze", font=('Times New Roman', 18)).pack(pady=10)
+        tk.Button(self.tab1, text='Upload Text File', bg="lightgray", fg="black", highlightbackground='black',
+                  font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area)).pack(pady=25, padx=20)
+        tk.Button(self.tab1, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
+                  font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area)).pack(pady=10, padx=20)
         self.title1.pack(pady=20)
-        self.title2 = ttk.Label(self.right_panel, text="Add to the model", font=('Times New Roman', 18)).pack(pady=20)
+
+        # Second tab
+        ttk.Label(self.tab2, text="Add to the model", font=('Times New Roman', 18)).pack(pady=10)
+        
+        ### TAGS FRAME ###
+        self.tags_frame = tk.Frame(self.tab2, bg='white')
+        self.tags_frame.pack(fill='both', expand=True, padx=20, pady=20)
+
+        ### PHRASE ENTRY AND BUTTON ###
+        self.phrase_entry = tk.Entry(self.tab2, font=('Times New Roman', 14), width=20)
+        self.phrase_entry.pack(pady=10)
+        self.add_button = tk.Button(self.tab2, text="Add Tag", command=self.add_tag)
+        self.add_button.pack()
         self.root.mainloop()
+
+    def add_tag(self):
+        phrase = self.phrase_entry.get()
+        if phrase:
+            tag_frame = tk.Frame(self.tags_frame, bg="lightblue")
+            tag_label = ttk.Label(tag_frame, text=phrase, background="lightblue")
+            tag_label.pack(side='left', padx=5)
+            remove_btn = ttk.Button(tag_frame, text="×", width=2, command=lambda f=tag_frame: self.remove_tag(f))
+            remove_btn.pack(side='right')
+            tag_frame.pack(pady=5, padx=5)
+            self.phrase_bubbles.append(tag_frame)
+            self.phrase_entry.delete(0, tk.END) 
+
+    def remove_tag(self, frame):
+        frame.destroy()
+        self.phrase_bubbles.remove(frame) 
 
     ### upload file as a .txt and read ### 
     def upload_file(self, text_widget):
