@@ -8,9 +8,13 @@ class PromptGen():
         self.generalizations = self.df["Generalizations"].tolist()
         self.weak_verbs = self.df["Weak verbs"].tolist()
         self.nominalizations = self.df["Nominalization"].tolist()
+        self.bad_sentences = []
 
     def add_error(self):
         print("add error")
+
+    def add_bad_example(self):
+        print("adding bad example")
 
     def check(self):
         print(self.tvw)

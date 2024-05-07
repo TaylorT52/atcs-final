@@ -7,7 +7,8 @@ import analyzer
 import promptgen
 
 class UIClass:
-    def __init__(self, a):
+    def __init__(self, a, promptgen):
+        self.promptgen = promptgen
         self.analyzer = a
         self.root = tk.Tk()
         self.WIDTH = 1500
@@ -52,6 +53,12 @@ class UIClass:
                   font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area)).pack(pady=25, padx=20)
         tk.Button(self.tab1, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
                   font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area)).pack(pady=10, padx=20)
+        up_button = tk.Button(self.tab1, text="👍", command=self.feedback('good'))
+        up_button.pack(side=tk.LEFT, padx=10)
+
+        # Create the "Thumbs Down" button
+        down_button = tk.Button(self.tab1, text="👎", command=self.feedback('bad'))
+        down_button.pack(side=tk.LEFT, padx=10)
         self.title1.pack(pady=20)
 
         # Second tab
@@ -65,8 +72,16 @@ class UIClass:
         self.phrase_entry = tk.Entry(self.tab2, font=('Times New Roman', 14), width=20)
         self.phrase_entry.pack(pady=10)
         self.add_button = tk.Button(self.tab2, text="Add Tag", command=self.add_tag)
+        self.submit_button = tk.Button(self.tab2, text="Submit", command=self.submit)
         self.add_button.pack()
+        self.submit_button.pack()
         self.root.mainloop()
+
+    def submit(self):
+        print('submit')
+
+    def feedback(self, good):
+        print(good)
 
     def add_tag(self):
         phrase = self.phrase_entry.get()
@@ -134,5 +149,5 @@ if __name__ == "__main__":
     analysis = analyzer.Analyzer()
     promptgen = promptgen.PromptGen()
     promptgen.check()
-    ui = UIClass(analysis)
+    ui = UIClass(analysis, promptgen)
     ui.create_ui()
