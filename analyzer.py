@@ -5,25 +5,29 @@ from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
 from langchain_community.llms import Ollama
-import configparser
 from crewai import Agent, Task, Crew, Process
+import promptgen
 
 class Analyzer():
     def __init__(self):
         self.model = Ollama(model = "llama2")
+        self.keywords = "'importance of', 'significance of', 'value of', 'valuable', 'useful', 'necessary', 'necessity of', 'important', 'it's important', 'crucial'"
+        self.goal = f"Return exact sentences containing the phrases. Don't extrapolate meaning, just identify phrases: {self.keywords}."
+        #f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {self.keywords}. Don't extrapolate meaning."
 
     def process_data(self, text):
         my_goal = "Identify sentences where there are errors in student essays from only the provided list of errors and return them. Return the exact entire sentences with 'importance of, significance of, value of, valuable, useful," + "  necessary, necessity of, important, it's important, crucial' in the text."+ " Return the exact sentences with any of the following hasty generalizations: " + "'Since the beginning of time', 'in society', 'in our world', 'throughout history', or any other similar hasty generalization." + " You do not need to fix the sentences or provide a conclusion text. Only return sentences with the provided errors. If there are no errors in the text, you may return nothing."
         responder = Agent(
             role = "English teacher assistant",
-            goal = my_goal,
-            backstory = "Given a student's essay, a teacher needs help marking up the errors in the student's essay.",
+            goal = self.goal,
+            backstory = "Given a student's essay, a teacher needs help marking up the errors in the student's essay. ",
             verbose = True,
             allow_delegation = False,
             llm = self.model
         )
         identify_errors = Task(
-            description = f"Identify the errors in the following essay: '{text}'",
+            description = f"Return the exact sentences which contain the phrases {self.keywords} from the text: '{text}'. The sentence must delcare the existence or necessity of importance, without detailing the object or subject of importance.",
+            #f"Return the exact sentences that declare the existence or necessity of importance, without detailing the object or subject of that importance. The sentences MUST contain the following phrases {self.keywords} in the given text: {text}",
             agent = responder,
             expected_output = "Only a list of each exact sentence where this an error, followed by a brief explanation of why the sentence was returned."
         )
@@ -36,12 +40,6 @@ class Analyzer():
 
         output = crew.kickoff()
         return output
-
-if __name__ == "__main__":
-    analysis = Analyzer()
-    f = open("essays/[Kletter] dog.txt", "r")
-    text = f.read()
-    print(analysis.process_data(text))
 
     # #TODO: need api key??? 
     # def load_api_key(self):
