@@ -3,20 +3,18 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OllamaEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
-from langchain_community.llms import OpenAI
 from langchain_community.llms import Ollama
 from crewai import Agent, Task, Crew, Process
 import promptgen
 
 class Analyzer():
     def __init__(self):
-        self.model = Ollama(model = "llama2")
+        self.model = Ollama(model = "wizardlm2")
         self.keywords = "'importance of', 'significance of', 'value of', 'valuable', 'useful', 'necessary', 'necessity of', 'important', 'it's important', 'crucial'"
         self.goal = f"Return exact sentences containing the phrases. Don't extrapolate meaning, just identify phrases: {self.keywords}."
         #f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {self.keywords}. Don't extrapolate meaning."
 
     def process_data(self, text):
-        my_goal = "Identify sentences where there are errors in student essays from only the provided list of errors and return them. Return the exact entire sentences with 'importance of, significance of, value of, valuable, useful," + "  necessary, necessity of, important, it's important, crucial' in the text."+ " Return the exact sentences with any of the following hasty generalizations: " + "'Since the beginning of time', 'in society', 'in our world', 'throughout history', or any other similar hasty generalization." + " You do not need to fix the sentences or provide a conclusion text. Only return sentences with the provided errors. If there are no errors in the text, you may return nothing."
         responder = Agent(
             role = "English teacher assistant",
             goal = self.goal,
