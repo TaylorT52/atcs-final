@@ -22,7 +22,7 @@ class PromptGen():
         print("add error")
 
     def add_bad_example(self, feedback, selected_sentence):
-        with open(self.file, 'w') as file:
+        with open("data/feedback.csv", 'w') as file:
             csvwriter = csv.writer(file)
             csvwriter.writerow(selected_sentence + "," + feedback)
         print(feedback)
