@@ -23,7 +23,7 @@ class UIClass:
         self.tab_control = ttk.Notebook(self.right_panel)
         self.tab1 = ttk.Frame(self.tab_control)
         self.tab2 = ttk.Frame(self.tab_control)
-        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
+        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18), width=50)
         self.create_ui()
 
     ### manage UI here ### 
@@ -56,6 +56,13 @@ class UIClass:
         up_button = tk.Button(self.tab1, text="👍", command=self.feedback('good'))
         up_button.pack(side=tk.LEFT, padx=10)
 
+        # Add text entry to first tab
+        ttk.Label(self.tab1, text="Feedback", font=('Times New Roman', 18)).pack(pady=10)
+        self.feedback_entry = tk.Entry(self.tab1, font=('Times New Roman', 14), width=20)
+        self.feedback_entry.pack(pady=50)
+        self.submit_button = tk.Button(self.tab1, text="Submit", command=self.submit_feedback)
+        self.submit_button.pack()
+
         # Create the "Thumbs Down" button
         down_button = tk.Button(self.tab1, text="👎", command=self.feedback('bad'))
         down_button.pack(side=tk.LEFT, padx=10)
@@ -75,7 +82,16 @@ class UIClass:
         self.submit_button = tk.Button(self.tab2, text="Submit", command=self.submit)
         self.add_button.pack()
         self.submit_button.pack()
+        
         self.root.mainloop()
+    
+    def submit_feedback(self):
+        feedback = self.feedback_entry.get()
+        if feedback:
+            self.promptgen.add_bad_example(feedback, self.selected_sentence)
+            self.analyzer.add_to_goal(feedback, self.selected_sentence)
+            self.feedback_entry.delete(0, tk.END)
+
 
     def submit(self):
         print('submit')
@@ -146,8 +162,8 @@ class UIClass:
 
 
 if __name__ == "__main__":
-    analysis = analyzer.Analyzer()
     promptgen = promptgen.PromptGen()
+    analysis = analyzer.Analyzer(promptgen)
     promptgen.check()
     ui = UIClass(analysis, promptgen)
     ui.create_ui()

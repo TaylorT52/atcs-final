@@ -8,10 +8,14 @@ from crewai import Agent, Task, Crew, Process
 import promptgen
 
 class Analyzer():
-    def __init__(self):
-        self.model = Ollama(model = "wizardlm2")
-        self.keywords = "'importance of', 'significance of', 'value of', 'valuable', 'useful', 'necessary', 'necessity of', 'important', 'it's important', 'crucial'"
-        self.goal = f"Return exact sentences containing the phrases. Don't extrapolate meaning, just identify phrases: {self.keywords}."
+    def __init__(self, promptgen):
+        self.model = Ollama(model = "llama3")
+        self.promptgen = promptgen
+        self.tvw = "'importance of', 'significance of', 'value of', 'valuable', 'useful', 'necessary', 'necessity of', 'important', 'it's important', 'crucial'"
+        self.hasty_generalizations = "'since the beginning of time', 'in society', 'in our world', 'throughout history'"
+        self.goal = f"Identify sentences where there are errors in student essays from only the following errors and return them. Return exact full sentences that contain any of the phrases {self.tvw} that tell readers 'that' something matters and not 'what' matters. Also, return only exact full sentences containing the phrases: {self.hasty_generalizations} that make an overly general statement about something. Only return sentences with the provided errors and do not modify original sentences in the text. If there are no errors in the text, you may return nothing." 
+        if len(self.promptgen.bad_sentences) != 0:
+            self.goal = self.goal + f" Example: {self.promptgen.bad_sentences[0]} is an incorrectly identified error because {self.promptgen.feedback_list[0]}"
         #f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {self.keywords}. Don't extrapolate meaning."
 
     def process_data(self, text):
@@ -24,10 +28,10 @@ class Analyzer():
             llm = self.model
         )
         identify_errors = Task(
-            description = f"Return the exact sentences which contain the phrases {self.keywords} from the text: '{text}'. The sentence must delcare the existence or necessity of importance, without detailing the object or subject of importance.",
+            description = f"Return only the exact sentences which contain any of the provided errors in the following text: {text}",
             #f"Return the exact sentences that declare the existence or necessity of importance, without detailing the object or subject of that importance. The sentences MUST contain the following phrases {self.keywords} in the given text: {text}",
             agent = responder,
-            expected_output = "Only a list of each exact sentence where this an error, followed by a brief explanation of why the sentence was returned."
+            expected_output = "Only a list of each full exact sentence where this an error, and then a brief explanation of why the sentence was returned as an error."
         )
         crew = Crew(
             agents = [responder],
