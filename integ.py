@@ -135,7 +135,7 @@ class UIClass:
     def analyze_text(self, text_widget):
         results = self.analyzer.process_data(self.essay)
         print(f"results {results}")
-        pattern = r"[.!?]\s+([A-Z].*?(?:[.!?]|$))"
+        pattern = r'(\d+\.\s)(?:"([^"]+)"|([^".]+))'
         
         ### find sentences in the text ###
         self.matched_sentences = re.findall(pattern, results)
@@ -143,17 +143,17 @@ class UIClass:
 
         ### tag to highlight ###
         for index, sentence in enumerate(self.matched_sentences):
-            start_index = self.essay.find(sentence)
+            start_index = self.essay.find(sentence[1])
             if start_index != -1:
                 if not start_index == 0:
-                    end_index = start_index + len(sentence)
+                    end_index = start_index + len(sentence[1])
                     start_position = text_widget.index(f"1.0+{start_index}c")
                     end_position = text_widget.index(f"1.0+{end_index}c")
                     tag_name = f"highlight_{index}"
                     text_widget.tag_add(tag_name, start_position, end_position)
                     text_widget.tag_config(tag_name, background='yellow', foreground='black')
 
-                    def on_click(event, s=sentence):
+                    def on_click(event, s=sentence[1]):
                         idx = self.matched_sentences.index(s)
                         error = self.matched_errors[idx]
                         self.title1.config(text=error)
@@ -162,7 +162,7 @@ class UIClass:
                     text_widget.tag_bind(tag_name, "<Button-1>", on_click)
             else:
                 print("nooooo")
-                print("+" + sentence + "+")
+                print("+" + sentence[1] + "+")
 
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ class Analyzer():
         all_splits = text_splitter.split_documents(data)
         oembed = OllamaEmbeddings(model="nomic-embed-text")
         vectorstore = Chroma.from_documents(documents=all_splits, embedding=oembed)
-        question=f"Return a dashed list of exact sentences from the text from only the following errors and return them. After the sentence, explain why you chose it. Return exact full sentences that contain any of the phrases {self.tvw} that tell readers 'that' something matters and not 'what' matters. Only return sentences with the provided errors and do not modify original sentences in the text. If there are no errors in the text, you may return nothing. Text: {text}" 
+        question=f"Return a numbered list of exact sentences from the text from only the following errors and return them. After the sentence, explain why you chose it. Return exact full sentences that contain any of the phrases {self.tvw} that tell readers 'that' something matters and not 'what' matters. Only return sentences with the provided errors and do not modify original sentences in the text. If there are no errors in the text, you may return nothing. Text: {text}" 
         print(question)
         qachain=RetrievalQA.from_chain_type(llm=OpenAI(api_key=self.api_key), retriever=vectorstore.as_retriever())
         ans = qachain.invoke({"query": question})
