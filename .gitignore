@@ -1,22 +1,10 @@
 .DS_Store
 .venv
 <<<<<<< HEAD
-<<<<<<< HEAD
+.json
+config.json
 .json
 .ini
-=======
-config.json
->>>>>>> adecd6fc (Ignore config.json)
-=======
-config.json
-=======
-.json
-<<<<<<< HEAD
->>>>>>> 4b1a1f67 (added verbose logging)
-<<<<<<< HEAD
->>>>>>> 775e7f7b (added verbose logging)
-=======
-=======
-.ini
->>>>>>> aa441f1a (works using open ai!)
->>>>>>> 4194af53 (works using open ai!)
+*.pyc
+*.DS_Store
+__pycache__

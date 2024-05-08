@@ -8,22 +8,28 @@ import promptgen
 
 class UIClass:
     def __init__(self, a, promptgen):
+        #objs 
         self.promptgen = promptgen
         self.analyzer = a
+        #tk
         self.root = tk.Tk()
         self.WIDTH = 1500
         self.HEIGHT = 700
         self.PANELWIDTH = 350
-        self.essay = ""
-        self.selected_sentence = "Click on any highlighted sentence to see your error"
-        self.matched_errors = []
-        self.matched_sentences = []
         self.left_panel = tk.Frame(self.root, width=self.WIDTH/2, height=self.HEIGHT)
         self.right_panel = tk.Frame(self.root, width=self.WIDTH/2, height=self.HEIGHT)
         self.tab_control = ttk.Notebook(self.right_panel)
         self.tab1 = ttk.Frame(self.tab_control)
         self.tab2 = ttk.Frame(self.tab_control)
-        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18), width=50)
+ 
+        #content
+        self.additions = []
+        self.essay = ""
+        self.selected_sentence = "Click on any highlighted sentence to see your error"
+        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
+        self.matched_errors = []
+        self.matched_sentences = []
+        #run stuff
         self.create_ui()
 
     ### manage UI here ### 
@@ -53,7 +59,7 @@ class UIClass:
                   font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area)).pack(pady=25, padx=20)
         tk.Button(self.tab1, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
                   font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area)).pack(pady=10, padx=20)
-        up_button = tk.Button(self.tab1, text="👍", command=self.feedback('good'))
+        up_button = tk.Button(self.tab1, text="👍", command=self.feedback())
         up_button.pack(side=tk.LEFT, padx=10)
 
         # Add text entry to first tab
@@ -64,7 +70,7 @@ class UIClass:
         self.submit_button.pack()
 
         # Create the "Thumbs Down" button
-        down_button = tk.Button(self.tab1, text="👎", command=self.feedback('bad'))
+        down_button = tk.Button(self.tab1, text="👎", command=self.feedback())
         down_button.pack(side=tk.LEFT, padx=10)
         self.title1.pack(pady=20)
 
@@ -95,8 +101,9 @@ class UIClass:
     def submit(self):
         print('submit')
 
-    def feedback(self, good):
-        print(good)
+    def feedback(self):
+        print("hello!")
+        print('self.selected sentence')
 
     def add_tag(self):
         phrase = self.phrase_entry.get()
