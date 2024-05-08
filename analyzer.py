@@ -9,13 +9,12 @@ import promptgen
 
 class Analyzer():
     def __init__(self, promptgen):
-        self.model = Ollama(model = "llama3")
+        self.model = Ollama(model = "llama2")
         self.promptgen = promptgen
         self.tvw = "'importance of', 'significance of', 'value of', 'valuable', 'useful', 'necessary', 'necessity of', 'important', 'it's important', 'crucial'"
         self.hasty_generalizations = "'since the beginning of time', 'in society', 'in our world', 'throughout history'"
         self.goal = f"Identify sentences where there are errors in student essays from only the following errors and return them. Return exact full sentences that contain any of the phrases {self.tvw} that tell readers 'that' something matters and not 'what' matters. Also, return only exact full sentences containing the phrases: {self.hasty_generalizations} that make an overly general statement about something. Only return sentences with the provided errors and do not modify original sentences in the text. If there are no errors in the text, you may return nothing." 
-        if len(self.promptgen.bad_sentences) != 0:
-            self.goal = self.goal + f" Example: {self.promptgen.bad_sentences[0]} is an incorrectly identified error because {self.promptgen.feedback_list[0]}"
+        self.goal = self.goal + " " + self.promptgen.feedback
         #f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {self.keywords}. Don't extrapolate meaning."
 
     def process_data(self, text):
@@ -42,6 +41,10 @@ class Analyzer():
 
         output = crew.kickoff()
         return output
+if __name__ == "__main__":
+    gen = promptgen.PromptGen()
+    analyzer = Analyzer(gen)
+    print(analyzer.goal)
 
     # #TODO: need api key??? 
     # def load_api_key(self):

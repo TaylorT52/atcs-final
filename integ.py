@@ -89,7 +89,6 @@ class UIClass:
         feedback = self.feedback_entry.get()
         if feedback:
             self.promptgen.add_bad_example(feedback, self.selected_sentence)
-            self.analyzer.add_to_goal(feedback, self.selected_sentence)
             self.feedback_entry.delete(0, tk.END)
 
 
@@ -150,6 +149,7 @@ class UIClass:
                     text_widget.tag_config(tag_name, background='yellow', foreground='black')
 
                     def on_click(event, s=sentence):
+                        self.selected_sentence = sentence
                         idx = self.matched_sentences.index(s)
                         error = self.matched_errors[idx]
                         self.title1.config(text=error)
