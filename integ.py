@@ -134,14 +134,12 @@ class UIClass:
     ### highlight sentences here ### 
     def analyze_text(self, text_widget):
         results = self.analyzer.process_data(self.essay)
-        pattern = r'\d+\.\s+"(.*?)"\s*(.*?)(?:\n|$)'
+        print(f"results {results}")
+        pattern = r"[.!?]\s+([A-Z].*?(?:[.!?]|$))"
         
         ### find sentences in the text ###
-        matches = re.findall(pattern, results, re.DOTALL)
-        for match in matches:
-            sentence, after_sentence = match
-            self.matched_sentences.append(sentence)
-            self.matched_errors.append(after_sentence)
+        self.matched_sentences = re.findall(pattern, results)
+        print(f"matches: {self.matched_sentences}")
 
         ### tag to highlight ###
         for index, sentence in enumerate(self.matched_sentences):
