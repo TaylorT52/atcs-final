@@ -8,22 +8,28 @@ import promptgen
 
 class UIClass:
     def __init__(self, a, promptgen):
+        #objs 
         self.promptgen = promptgen
         self.analyzer = a
+        #tk
         self.root = tk.Tk()
         self.WIDTH = 1500
         self.HEIGHT = 700
         self.PANELWIDTH = 350
-        self.essay = ""
-        self.selected_sentence = "Click on any highlighted sentence to see your error"
-        self.matched_errors = []
-        self.matched_sentences = []
         self.left_panel = tk.Frame(self.root, width=self.WIDTH/2, height=self.HEIGHT)
         self.right_panel = tk.Frame(self.root, width=self.WIDTH/2, height=self.HEIGHT)
         self.tab_control = ttk.Notebook(self.right_panel)
         self.tab1 = ttk.Frame(self.tab_control)
         self.tab2 = ttk.Frame(self.tab_control)
         self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18), width=50)
+        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
+        #content
+        self.additions = []
+        self.essay = ""
+        self.selected_sentence = "Click on any highlighted sentence to see your error"
+        self.matched_errors = []
+        self.matched_sentences = []
+        #run stuff
         self.create_ui()
 
     ### manage UI here ### 
@@ -96,8 +102,9 @@ class UIClass:
     def submit(self):
         print('submit')
 
-    def feedback(self, good):
-        print(good)
+    def feedback(self):
+        print("hello!")
+        print('self.selected sentence')
 
     def add_tag(self):
         phrase = self.phrase_entry.get()
