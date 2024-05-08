@@ -21,12 +21,12 @@ class UIClass:
         self.tab_control = ttk.Notebook(self.right_panel)
         self.tab1 = ttk.Frame(self.tab_control)
         self.tab2 = ttk.Frame(self.tab_control)
-        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18), width=50)
-        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
+ 
         #content
         self.additions = []
         self.essay = ""
         self.selected_sentence = "Click on any highlighted sentence to see your error"
+        self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
         self.matched_errors = []
         self.matched_sentences = []
         #run stuff
@@ -59,7 +59,7 @@ class UIClass:
                   font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area)).pack(pady=25, padx=20)
         tk.Button(self.tab1, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
                   font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area)).pack(pady=10, padx=20)
-        up_button = tk.Button(self.tab1, text="👍", command=self.feedback('good'))
+        up_button = tk.Button(self.tab1, text="👍", command=self.feedback())
         up_button.pack(side=tk.LEFT, padx=10)
 
         # Add text entry to first tab
@@ -70,7 +70,7 @@ class UIClass:
         self.submit_button.pack()
 
         # Create the "Thumbs Down" button
-        down_button = tk.Button(self.tab1, text="👎", command=self.feedback('bad'))
+        down_button = tk.Button(self.tab1, text="👎", command=self.feedback())
         down_button.pack(side=tk.LEFT, padx=10)
         self.title1.pack(pady=20)
 
@@ -95,7 +95,6 @@ class UIClass:
         feedback = self.feedback_entry.get()
         if feedback:
             self.promptgen.add_bad_example(feedback, self.selected_sentence)
-            self.analyzer.add_to_goal(feedback, self.selected_sentence)
             self.feedback_entry.delete(0, tk.END)
 
 
