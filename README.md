@@ -1,7 +1,8 @@
 # ESSAY ANNIHILIATOR >:D 
-#### trying to do this without openai (ollama instead)
+#### your go-to essay editor for ap lang :) 
+#### authors: @cody kletter & @taylor tam
 
-- dependencies (will be moved to json)
+- dependencies
     - langchain!
 
 - Some steps
