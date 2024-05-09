@@ -14,8 +14,19 @@ class PromptGen():
         self.weak_verbs = self.remove_nan(self.weak_verbs)
         self.nominalizations = self.df["Nominalization"].tolist()
         self.nominalizations = self.remove_nan(self.nominalizations)
-        f = open(self.feedback_path, "r")
-        self.feedback = f.read()
+        self.bad_sentences = []
+        self.feedback_list = []
+        self.feedback_path = "data/feedback.txt"
+
+        self.goal_basic = f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {', '.join(self.tvw)}. Don't extrapolate meaning."
+
+    def generate_goal(self):
+        goal = self.goal_basic + " Here are example sentence evaluations for context: "
+        with open(self.feedback_path, 'r') as file:
+            for line in file:
+                goal += line.strip()
+        return goal
+            
     def remove_nan(self, list):
         return [x for x in list if str(x) != 'nan']
     
@@ -23,10 +34,8 @@ class PromptGen():
         print("add error")
 
     def add_bad_example(self, feedback, selected_sentence):
-        f = open(self.feedback_path, "a")
-        f.write(f"Example: '{selected_sentence}' is an incorrectly identified error because {feedback}. ")
-        f.close()
-        print(feedback)
+        with open(self.feedback_path, 'a') as file:
+            file.write(f"{selected_sentence}. This sentence should NOT be highlighted because {feedback}" + '\n') 
 
     def check(self):
         print(self.tvw)

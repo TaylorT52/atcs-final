@@ -11,7 +11,8 @@ class UIClass:
         #objs 
         self.promptgen = promptgen
         self.analyzer = a
-        #tk
+     
+        #anything for tk
         self.root = tk.Tk()
         self.WIDTH = 1500
         self.HEIGHT = 700
@@ -29,6 +30,11 @@ class UIClass:
         self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
         self.matched_errors = []
         self.matched_sentences = []
+        self.selected_error = "Click on any highlighted sentence to see your error"
+        self.title1 = ttk.Label(self.tab1, text=self.selected_error, font=('Times New Roman', 18))
+        self.matched_errors = []
+        self.matched_sentences = []
+
         #run stuff
         self.create_ui()
 
@@ -59,20 +65,13 @@ class UIClass:
                   font=('Times New Roman', 18), command=lambda: self.upload_file(self.text_area)).pack(pady=25, padx=20)
         tk.Button(self.tab1, text='Analyze Text', bg="lightgray", fg="black", highlightbackground='black',
                   font=('Times New Roman', 18), command=lambda: self.analyze_text(self.text_area)).pack(pady=10, padx=20)
-        up_button = tk.Button(self.tab1, text="👍", command=self.feedback())
-        up_button.pack(side=tk.LEFT, padx=10)
 
         # Add text entry to first tab
-        ttk.Label(self.tab1, text="Feedback", font=('Times New Roman', 18)).pack(pady=10)
+        self.title1.pack()
         self.feedback_entry = tk.Entry(self.tab1, font=('Times New Roman', 14), width=20)
-        self.feedback_entry.pack(pady=50)
+        self.feedback_entry.pack(pady=20)
         self.submit_button = tk.Button(self.tab1, text="Submit", command=self.submit_feedback)
         self.submit_button.pack()
-
-        # Create the "Thumbs Down" button
-        down_button = tk.Button(self.tab1, text="👎", command=self.feedback())
-        down_button.pack(side=tk.LEFT, padx=10)
-        self.title1.pack(pady=20)
 
         # Second tab
         ttk.Label(self.tab2, text="Add to the model", font=('Times New Roman', 18)).pack(pady=10)
@@ -93,17 +92,17 @@ class UIClass:
     
     def submit_feedback(self):
         feedback = self.feedback_entry.get()
+        idx = self.matched_errors.index(self.selected_error)
+        sentence = self.matched_sentences[idx]
         if feedback:
-            self.promptgen.add_bad_example(feedback, self.selected_sentence)
+            self.promptgen.add_bad_example(feedback, sentence)
             self.feedback_entry.delete(0, tk.END)
-
 
     def submit(self):
         print('submit')
 
-    def feedback(self):
-        print("hello!")
-        print('self.selected sentence')
+    def feedback(self, good):
+        print(good)
 
     def add_tag(self):
         phrase = self.phrase_entry.get()
@@ -142,6 +141,7 @@ class UIClass:
             sentence, after_sentence = match
             self.matched_sentences.append(sentence)
             self.matched_errors.append(after_sentence)
+        print(self.matched_errors)
 
         ### tag to highlight ###
         for index, sentence in enumerate(self.matched_sentences):
@@ -159,6 +159,11 @@ class UIClass:
                         self.selected_sentence = sentence
                         idx = self.matched_sentences.index(s)
                         error = self.matched_errors[idx]
+                        self.selected_sentence = sentence
+                        self.selected_error = error
+
+                        print(self.selected_error, self.selected_sentence)
+
                         self.title1.config(text=error)
                         self.root.update_idletasks()
 
@@ -166,7 +171,6 @@ class UIClass:
             else:
                 print("nooooo")
                 print("+" + sentence + "+")
-
 
 if __name__ == "__main__":
     promptgen = promptgen.PromptGen()
