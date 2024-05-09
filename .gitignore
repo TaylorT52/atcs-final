@@ -1,3 +1,9 @@
 .DS_Store
 .venv
+.json
 config.json
+.json
+.ini
+*.pyc
+*.DS_Store
+__pycache__
