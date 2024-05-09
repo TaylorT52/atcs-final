@@ -37,4 +37,3 @@ class Analyzer():
         output = crew.kickoff()
         return output
 
-

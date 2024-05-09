@@ -12,6 +12,14 @@ class UIClass:
         self.promptgen = promptgen
         self.analyzer = a
      
+        #content
+        self.additions = []
+        self.matched_errors = []
+        self.matched_sentences = []
+        self.essay = ""
+        self.selected_sentence = "Click on any highlighted sentence to see your error"
+        self.selected_error = "Click on any highlighted sentence to see your error"
+
         #anything for tk
         self.root = tk.Tk()
         self.WIDTH = 1500
@@ -22,18 +30,7 @@ class UIClass:
         self.tab_control = ttk.Notebook(self.right_panel)
         self.tab1 = ttk.Frame(self.tab_control)
         self.tab2 = ttk.Frame(self.tab_control)
- 
-        #content
-        self.additions = []
-        self.essay = ""
-        self.selected_sentence = "Click on any highlighted sentence to see your error"
         self.title1 = ttk.Label(self.tab1, text=self.selected_sentence, font=('Times New Roman', 18))
-        self.matched_errors = []
-        self.matched_sentences = []
-        self.selected_error = "Click on any highlighted sentence to see your error"
-        self.title1 = ttk.Label(self.tab1, text=self.selected_error, font=('Times New Roman', 18))
-        self.matched_errors = []
-        self.matched_sentences = []
 
         #run stuff
         self.create_ui()

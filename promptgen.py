@@ -16,7 +16,6 @@ class PromptGen():
         self.nominalizations = self.remove_nan(self.nominalizations)
         self.bad_sentences = []
         self.feedback_list = []
-        self.feedback_path = "data/feedback.txt"
 
         self.goal_basic = f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {', '.join(self.tvw)}. Don't extrapolate meaning."
 
