@@ -1,2 +1,3 @@
 Example: 'It's important to recognize the crucial role dogs play in our society and in our lives.' is an incorrectly identified error because reasoning. 
 We need to maintain autonomy over our own thoughts and opinions because it helps us grow personally and avoid becoming a homogenous whole, or only adhering to a singular narrative.. This sentence should NOT be highlighted because this is a topic sentence
+Notably, Thurber was a humorist who wrote diatribes against the United States government when there was a great fear of communism and ideas concerning censorship were beginning to circulate.. This sentence should NOT be highlighted because this does not contain the phrase useful

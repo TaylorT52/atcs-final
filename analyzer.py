@@ -11,17 +11,13 @@ class Analyzer():
     def __init__(self, promptgen):
         self.model = Ollama(model = "llama2")
         self.promptgen = promptgen
-        self.tvw = "'importance of', 'significance of', 'value of', 'valuable', 'useful', 'necessary', 'necessity of', 'important', 'it's important', 'crucial'"
-        self.hasty_generalizations = "'since the beginning of time', 'in society', 'in our world', 'throughout history'"
-        self.goal =  f"Return exact sentences that state the existence of value without specifying what is important, containing the following phrases {self.tvw}. Don't extrapolate meaning."
         self.goal = self.promptgen.generate_goal()
-        print(f"goal: {self.goal}")
 
     def process_data(self, text):
         responder = Agent(
             role = "English teacher assistant",
             goal = self.goal,
-            backstory = "Given a student's essay, a teacher needs help marking up the errors in the student's essay. ",
+            backstory = "Given a student's essay, a teacher needs help marking up the errors in the student's essay.",
             verbose = True,
             allow_delegation = False,
             llm = self.model
@@ -40,8 +36,5 @@ class Analyzer():
 
         output = crew.kickoff()
         return output
-if __name__ == "__main__":
-    gen = promptgen.PromptGen()
-    analyzer = Analyzer(gen)
-    print(analyzer.goal)
+
 

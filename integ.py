@@ -101,9 +101,6 @@ class UIClass:
     def submit(self):
         print('submit')
 
-    def feedback(self, good):
-        print(good)
-
     def add_tag(self):
         phrase = self.phrase_entry.get()
         if phrase:
@@ -161,9 +158,6 @@ class UIClass:
                         error = self.matched_errors[idx]
                         self.selected_sentence = sentence
                         self.selected_error = error
-
-                        print(self.selected_error, self.selected_sentence)
-
                         self.title1.config(text=error)
                         self.root.update_idletasks()
 
