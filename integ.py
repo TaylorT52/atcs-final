@@ -1,3 +1,6 @@
+#authors @ taylor tam & cody kletter
+#gui and main for essay analyzer
+
 import tkinter as tk
 from tkinter import filedialog
 from tkinter.scrolledtext import ScrolledText
@@ -87,6 +90,7 @@ class UIClass:
         
         self.root.mainloop()
     
+    #submits sentence feedback (text box input when click on highlight)
     def submit_feedback(self):
         feedback = self.feedback_entry.get()
         idx = self.matched_errors.index(self.selected_error)
@@ -95,11 +99,18 @@ class UIClass:
             self.promptgen.add_bad_example(feedback, sentence)
             self.feedback_entry.delete(0, tk.END)
 
+    #submits additional tagged phrases as errors
     def submit(self):
-        print('submit')
+        self.promptgen.add_error(self.additions)
+        self.additions = []
+        for widget in self.tags_frame.winfo_children():
+            widget.destroy()
 
+    #adds phrase as error
     def add_tag(self):
         phrase = self.phrase_entry.get()
+        self.additions.append(phrase)
+        print(self.additions)
         if phrase:
             tag_frame = tk.Frame(self.tags_frame, bg="lightblue")
             tag_label = ttk.Label(tag_frame, text=phrase, background="lightblue")
@@ -107,14 +118,13 @@ class UIClass:
             remove_btn = ttk.Button(tag_frame, text="×", width=2, command=lambda f=tag_frame: self.remove_tag(f))
             remove_btn.pack(side='right')
             tag_frame.pack(pady=5, padx=5)
-            self.phrase_bubbles.append(tag_frame)
             self.phrase_entry.delete(0, tk.END) 
 
+    #for deleting a phrase added as a tag
     def remove_tag(self, frame):
         frame.destroy()
-        self.phrase_bubbles.remove(frame) 
 
-    ### upload file as a .txt and read ### 
+    ### upload file as a .txt and read 
     def upload_file(self, text_widget):
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
         if file_path:
@@ -124,20 +134,19 @@ class UIClass:
                 text_widget.delete('1.0', tk.END)
                 text_widget.insert(tk.END, content)
 
-    ### highlight sentences here ### 
+    ### highlight sentences here  
     def analyze_text(self, text_widget):
         results = self.analyzer.process_data(self.essay)
         pattern = r'\d+\.\s+"(.*?)"\s*(.*?)(?:\n|$)'
         
-        ### find sentences in the text ###
+        ### find sentences in the text w/ regex
         matches = re.findall(pattern, results, re.DOTALL)
         for match in matches:
             sentence, after_sentence = match
             self.matched_sentences.append(sentence)
             self.matched_errors.append(after_sentence)
-        print(self.matched_errors)
 
-        ### tag to highlight ###
+        ### tag to highlight 
         for index, sentence in enumerate(self.matched_sentences):
             start_index = self.essay.find(sentence)
             if start_index != -1:
@@ -149,6 +158,7 @@ class UIClass:
                     text_widget.tag_add(tag_name, start_position, end_position)
                     text_widget.tag_config(tag_name, background='yellow', foreground='black')
 
+                    # event to show error when sentence clicked
                     def on_click(event, s=sentence):
                         self.selected_sentence = sentence
                         idx = self.matched_sentences.index(s)
