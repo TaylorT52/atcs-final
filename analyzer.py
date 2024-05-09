@@ -15,7 +15,9 @@ class Analyzer():
         self.model = Ollama(model = "llama2")
         self.promptgen = promptgen
 
+    # inference method
     def process_data(self, text):
+        #for debugging
         print(self.promptgen.generate_goal())
         print("\n")
         print(self.promptgen.generate_task() + text)

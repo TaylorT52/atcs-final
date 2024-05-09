@@ -52,6 +52,7 @@ class PromptGen():
         with open(self.feedback_path, 'a') as file:
             file.write(f"{selected_sentence}. This sentence should NOT be highlighted because {feedback}" + '\n') 
 
+    #for debugging
     def check(self):
         print(self.tvw)
         print(self.generalizations)
